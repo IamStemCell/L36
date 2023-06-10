@@ -8,6 +8,186 @@
 
 #Rewrite the code to use simple functions to get the same results but using a multiprocessing library. Time the execution of both realizations, explore the results, what realization is more effective, why did you get a result like this.
 
+import asyncio
+import time
+
+
+async def fibAsync(n):
+    a = 0
+    b = 1
+    c = 0
+
+    for i in range(num - 1):
+        c = a + b
+        a = b
+        b = c
+
+    return c 
+
+
+
+async def factAsync(n):
+    if n<0:
+        raise ValueError("positive ints only")
+
+    fact = 1
+
+    for i in range(2, n+1):
+
+        fact *= i
+
+    return fact
+
+async def sqrAsync(n):
+    if n<0:
+        raise ValueError('positive ints only ')
+
+    squares = [i**2 for i in range(n+1)]
+    return squares
+
+async def cubAsync(n):
+    if n<0:
+        raise ValueError('positive ints only ')
+
+    cubes = [i**3 for i in range(n+1)]
+
+    return cubes
+
+async def main():
+    numbers = list(range[1,11])
+
+    #list для таскiв
+    tasks = []
+
+    #планування виконання кожної функції для всіх номерів зв списку циклом for:
+    for num in numbers:
+        fib_task = asyncio.create_task(fibAsync(num))
+        fact_task =  asyncio.create_task(factAsync(num))
+        squares_task = asyncio.create_task(sqrAsync(num))
+        cubes_task = asyncio.create_task(cubAsync(num))
+
+    #add tasks to the list
+        tasks.append((fib_task, fact_task, squares_task, cubes_task))
+
+
+
+    await asyncio.gather(*[task for task_set in tasks for task in task_set]) #wait for all tasks to finish
+
+
+
+    results = [] #retrieving res for each number
+
+    for i, num in enumerate(numbers):
+        fib_res = tasks[i][0].result()
+        fact_res = tasks[i][1].result()
+        sqr_res = tasks[i][2].result()
+        cub_res = tasks[i][3].result() #got 4 lists of results
+
+        results.append((num, fib_res, fact_res, sqr_res, cub_res))
+
+    for num, fib_res, fact_res, sqr_res, cub_res in results:
+        print(f"Function calculation results for number {num}:")
+        print(f"Fibonacci : {fib_res}")
+        print(f"Factorial : {fact_res}")
+        print(f"Squares: {squares} ")
+        print(f"Cubes: {cubes}")
+        print()
+
+start_time = time.perf_counter()
+
+asyncio.run(main())
+
+end_time = time.perf_counter()
+
+perf_time = end_time - start_time
+
+print(f"Performance time using async is :{perf_time} seconds")
+
+#################
+#використовуючи паралельне обчислення з допомогою модуля multiprocessing 
+
+import time
+import multiprocessing
+
+def fibmultiP(n):
+    a = 0
+    b = 1
+    c = 0
+
+    for i in range(num - 1):
+        c = a + b
+        a = b
+        b = c
+
+    return c  
+
+
+
+def factmultiP(n):
+    if n<0:
+        raise ValueError("positive ints only")
+
+    fact = 1
+
+    for i in range(2, n+1):
+
+        fact *= i
+
+    return fact
+
+def sqrmultiP(n):
+    if n<0:
+        raise ValueError('positive ints only ')
+
+    squares = [i**2 for i in range(n+1)]
+    return squares
+
+def cubmultiP(n):
+    if n<0:
+        raise ValueError('positive ints only ')
+
+    cubes = [i**3 for i in range(n+1)]
+
+    return cubes
+
+def main():
+    numbers = list(range(1,11))
+
+    pool = multiprocessing.Pool()
+
+    #паралелне викoнання
+    start = time.perf_counter()
+
+    fib_reslt = pool.map(fibmultiP, numbers )
+    fact_reslt = pool.map(factmultiP, numbers )
+    sqr_reslt = pool.map(sqrmultiP, numbers )
+    cub_reslt = pool.map(cubmultiP,  numbers )
+
+    end = time.perf_counter()
+
+    perf_time = end-start
+
+
+
+    #print res
+    for num, fib_reslt, fact_reslt, sqr_reslt, cub_reslt in zip(numbers, fib_reslt, fact_reslt, sqr_reslt, cub_reslt):
+        print(f"Calculation results for number {num}:")
+        print(f"Fibonacci : {fib_reslt}")
+        print(f"Factorial : {fact_reslt}")
+        print(f"Squares: {sqr_reslt} ")
+        print(f"Cubes: {cub_reslt}")
+        print()
+
+    print(f'Performance time using parralel multiprocessing is : {perf_time} seconds')
+
+
+if __name__ =="__main__":
+    main()
+
+#висновок - паралельне обчислення ефективніше тому, що multiprocessing має перевагу у часі виконання
+
+
+
  
 
 #Task 2
