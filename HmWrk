@@ -42,14 +42,14 @@ async def sqrAsync(n):
     if n<0:
         raise ValueError('positive ints only ')
 
-    squares = [i**2 for i in range(n+1)]
+    squares = n**2
     return squares
 
 async def cubAsync(n):
     if n<0:
         raise ValueError('positive ints only ')
 
-    cubes = [i**3 for i in range(n+1)]
+    cubes = n**3
 
     return cubes
 
@@ -59,7 +59,7 @@ async def main():
     #list для таскiв
     tasks = []
 
-    #планування виконання кожної функції для всіх номерів зв списку циклом for:
+    #планування виконання кожної функції для всіх номерів зі списку циклом for:
     for num in numbers:
         fib_task = asyncio.create_task(fibAsync(num))
         fact_task =  asyncio.create_task(factAsync(num))
