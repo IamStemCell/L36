@@ -139,14 +139,14 @@ def sqrmultiP(n):
     if n<0:
         raise ValueError('positive ints only ')
 
-    squares = [i**2 for i in range(n+1)]
+    squares = n**2
     return squares
 
 def cubmultiP(n):
     if n<0:
         raise ValueError('positive ints only ')
 
-    cubes = [i**3 for i in range(n+1)]
+    cubes = n**3
 
     return cubes
 
