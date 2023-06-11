@@ -105,6 +105,7 @@ print(f"Performance time using async is :{perf_time} seconds")
 
 #################
 #використовуючи паралельне обчислення з допомогою модуля multiprocessing 
+#з метою порівняння ефективності 
 
 import time
 import multiprocessing
@@ -119,8 +120,7 @@ def fibmultiP(n):
         a = b
         b = c
 
-    return c  
-
+    return c
 
 
 def factmultiP(n):
@@ -154,35 +154,39 @@ def main():
     numbers = list(range(1,11))
 
     pool = multiprocessing.Pool()
-
-    #паралелне викoнання
-    start = time.perf_counter()
+    #results = []
 
     fib_reslt = pool.map(fibmultiP, numbers )
     fact_reslt = pool.map(factmultiP, numbers )
     sqr_reslt = pool.map(sqrmultiP, numbers )
     cub_reslt = pool.map(cubmultiP,  numbers )
 
-    end = time.perf_counter()
+    #results.append(fib_reslt)
+    #results.append(fact_reslt)
+    #results.append(sqr_reslt)
+    #results.append(cub_reslt)
 
-    perf_time = end-start
+    #return print(results)
+    #[[0, 1, 2, 3, 5, 8, 13, 21, 34, 55], [1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800], [1, 4, 9, 16, 25, 36, 49, 64, 81, 100], [1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]]
+    print(f"Fibonacci : {fib_reslt}")
+    print(f"Factorial : {fact_reslt}")
+    print(f"Squares: {sqr_reslt} ")
+    print(f"Cubes: {cub_reslt}")
 
-
-
-    #print res
-    for num, fib_reslt, fact_reslt, sqr_reslt, cub_reslt in zip(numbers, fib_reslt, fact_reslt, sqr_reslt, cub_reslt):
-        print(f"Calculation results for number {num}:")
-        print(f"Fibonacci : {fib_reslt}")
-        print(f"Factorial : {fact_reslt}")
-        print(f"Squares: {sqr_reslt} ")
-        print(f"Cubes: {cub_reslt}")
-        print()
-
-    print(f'Performance time using parralel multiprocessing is : {perf_time} seconds')
-
-
-if __name__ =="__main__":
+start = time.perf_counter()
+if __name__ == "__main__":
     main()
+end = time.perf_counter()
+
+print(f'Performance time using parralel multiprocessing is : {end-start} seconds')
+
+#console
+#Fibonacci: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55]
+#Factorial: [1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800]
+#Squares: [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+#Cubes: [1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]
+#Performance time using parralel multiprocessing is: 0.03328942402731627 seconds
+
 
 #висновок - паралельне обчислення ефективніше тому, що multiprocessing має перевагу у часі виконання
 
