@@ -182,3 +182,35 @@ print(f'Performance time using parralel multiprocessing is : {end-start} seconds
 #Echo server with asyncio
 
 #Create a socket echo server which handles each connection using asyncio Tasks.
+
+L36TASK3Server.py 
+
+import asyncio
+
+async def handle_client(reader, writer):
+    while True:
+        data = await reader.read(100)
+        if not data:
+            break
+
+        message = data.decode('utf-8')
+        addr = writer.get_extra_info('peername')
+        print(f"Got {message!r} from {addr!r}")
+
+        writer.write(data)
+        await writer.drain()
+
+    print("Connection closed")
+    writer.close()
+
+async def run_serv():
+    server = await asyncio.start_server(handle_client, '127.0.0.1', 8888)
+
+    addr = server.sockets[0].getsockname()
+    print(f"Server is up and running at {addr}")
+
+    async with server:
+        await server.serve_forever()
+
+asyncio.run(run_serv())
+
