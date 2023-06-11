@@ -8,27 +8,29 @@
 
 #Rewrite the code to use simple functions to get the same results but using a multiprocessing library. Time the execution of both realizations, explore the results, what realization is more effective, why did you get a result like this.
 
-import asyncio
+
 import time
+import asyncio
 
 
-async def fibAsync(n):
+async def fibonacci(n):
+    if n<0:
+        raise ValueError('positive ints only')
     a = 0
     b = 1
     c = 0
 
-    for i in range(n- 1):
+    for i in range(n - 1):
         c = a + b
         a = b
         b = c
 
-    return c 
+    return c
 
 
-
-async def factAsync(n):
+async def factorial(n):
     if n<0:
-        raise ValueError("positive ints only")
+        raise ValueError('positive ints only')
 
     fact = 1
 
@@ -38,14 +40,14 @@ async def factAsync(n):
 
     return fact
 
-async def sqrAsync(n):
+async def squares(n):
     if n<0:
         raise ValueError('positive ints only ')
 
     squares = n**2
     return squares
 
-async def cubAsync(n):
+async def cubic(n):
     if n<0:
         raise ValueError('positive ints only ')
 
@@ -53,57 +55,28 @@ async def cubAsync(n):
 
     return cubes
 
-async def main():
-    numbers = list(range[1,11])
+#here we schedule tasks in range 1 to 10
 
-    #list для таскiв
+async def process_all_tasks():
     tasks = []
+    for i in range(1,11):
+        taks.append(asyncio.create_task(fibonacci(i)))
+        taks.append(asyncio.create_task(factorial(i)))
+        taks.append(asyncio.create_task(squares(i)))
+        taks.append(asyncio.create_task(cubcic(i)))
 
-    #планування виконання кожної функції для всіх номерів зі списку циклом for:
-    for num in numbers:
-        fib_task = asyncio.create_task(fibAsync(num))
-        fact_task =  asyncio.create_task(factAsync(num))
-        squares_task = asyncio.create_task(sqrAsync(num))
-        cubes_task = asyncio.create_task(cubAsync(num))
-
-    #add tasks to the list
-        tasks.append((fib_task, fact_task, squares_task, cubes_task))
+    fib_res, fact_res, squares_res, cubic_res = await asyncio.gather(*tasks)
+    return fib_res, fact_res, squares_res, cubic_res
 
 
+start = time.perf_counter()
+asyncio.run(process_all_tasks())
 
-    await asyncio.gather(*[task for task_set in tasks for task in task_set]) #wait for all tasks to finish
+end = time.perf_counter()
+print(f"Performance of asyncio calculation: {end-start} seсonds")
 
 
-
-    results = [] #retrieving res for each number
-
-    for i, num in enumerate(numbers):
-        fib_res = tasks[i][0].result()
-        fact_res = tasks[i][1].result()
-        sqr_res = tasks[i][2].result()
-        cub_res = tasks[i][3].result() #got 4 lists of results
-
-        results.append((num, fib_res, fact_res, sqr_res, cub_res))
-
-    for num, fib_res, fact_res, sqr_res, cub_res in results:
-        print(f"Function calculation results for number {num}:")
-        print(f"Fibonacci : {fib_res}")
-        print(f"Factorial : {fact_res}")
-        print(f"Squares: {squares} ")
-        print(f"Cubes: {cubes}")
-        print()
-
-start_time = time.perf_counter()
-
-asyncio.run(main())
-
-end_time = time.perf_counter()
-
-perf_time = end_time - start_time
-
-print(f"Performance time using async is :{perf_time} seconds")
-
-#################
+######-with multiprocessing - parallel
 #використовуючи паралельне обчислення з допомогою модуля multiprocessing 
 #з метою порівняння ефективності 
 
