@@ -214,3 +214,30 @@ async def run_serv():
 
 asyncio.run(run_serv())
 
+
+L36TASK3Client.py 
+import asyncio
+
+async def send_message(message):
+    reader, writer = await asyncio.open_connection('127.0.0.1', 8888)
+
+    writer.write(message.encode())
+    await writer.drain()
+
+    data = await reader.read(100)
+    response = data.decode()
+    print(f"Got response: {response}")
+
+    writer.close()
+    await writer.wait_closed()
+
+asyncio.run(send_message("salve!"))
+
+
+#У клієнтському коді корутина send_message встановлює з'єднання з ехо-сервером, 
+#надсилає повідомлення, отримує відповідь і закриває з'єднання.
+#Вона використовує asyncio.open_connection для встановлення з'єднання і reader.read для отримання відповіді.
+
+
+
+
